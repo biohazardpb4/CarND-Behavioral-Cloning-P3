@@ -8,19 +8,29 @@ with open('./collected_data/center_full_lap_counterclockwise/driving_log.csv') a
     for line in reader:
         lines.append(line)
 
-images = []
-measurements = []
+images, measurements = [], []
 for line in lines:
-    source_path = line[0]
-    filename = source_path.split('/')[-1]
-    impath = './collected_data/center_full_lap_counterclockwise/IMG/' + filename
-    image = cv2.imread(impath)
-    images.append(image)
+    center_left_right = line[0:2]
+    filenames = [source_path.split('/')[-1] for source_path in center_left_right]
+    impaths = ['./collected_data/center_full_lap_counterclockwise/IMG/' + filename for filename in filenames]
+    images.extend([cv2.imread(impath) for impath in impaths])
     measurement = float(line[3])
-    measurements.append(measurement)
+    # derived from multi-camera example image
+    correction = 0.15
+    left_measurement = measurement + correction
+    right_measurement = measurement - correction
+    measurements.extend([measurement, left_measurement, right_measurement])
 
-X_train = np.array(images)
-y_train = np.array(measurements)
+# Augment images by flipping horizontally and negating steering angle.
+augmented_images, augmented_measurements = [], []
+for image, measurement in zip(images, measurements):
+  augmented_images.append(image)
+  augmented_measurements.append(measurement)
+  augmented_images.append(np.fliplr(image))
+  augmented_measurements.append(measurement*-1.0)
+
+X_train = np.array(augmented_images)
+y_train = np.array(augmented_measurements)
 
 from keras.models import Sequential
 from keras.layers import Lambda, Cropping2D, Convolution2D, Flatten, Dense
