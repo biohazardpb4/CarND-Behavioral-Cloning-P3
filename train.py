@@ -1,33 +1,45 @@
 import csv
 import cv2
 import numpy as np
+from os import listdir
+from os.path import join
 
-lines = []
-with open('./collected_data/center_full_lap_counterclockwise/driving_log.csv') as f:
-    reader = csv.reader(f)
-    for line in reader:
-        lines.append(line)
+INCLUDE_LR=False
 
-images, measurements = [], []
-for line in lines:
-    center_left_right = line[0:2]
-    filenames = [source_path.split('/')[-1] for source_path in center_left_right]
-    impaths = ['./collected_data/center_full_lap_counterclockwise/IMG/' + filename for filename in filenames]
-    images.extend([cv2.imread(impath) for impath in impaths])
-    measurement = float(line[3])
-    # derived from multi-camera example image
-    correction = 0.15
-    left_measurement = measurement + correction
-    right_measurement = measurement - correction
-    measurements.extend([measurement, left_measurement, right_measurement])
-
-# Augment images by flipping horizontally and negating steering angle.
 augmented_images, augmented_measurements = [], []
-for image, measurement in zip(images, measurements):
-  augmented_images.append(image)
-  augmented_measurements.append(measurement)
-  augmented_images.append(np.fliplr(image))
-  augmented_measurements.append(measurement*-1.0)
+collected_data_path = './collected_data/'
+for run in listdir(collected_data_path):
+    run_path = join(collected_data_path, run)
+    print('ingesting run: {}'.format(run_path))
+    lines = []
+    with open(join(run_path, 'driving_log.csv')) as f:
+        reader = csv.reader(f)
+        for line in reader:
+            lines.append(line)
+
+    images, measurements = [], []
+    for line in lines:
+        center_left_right = line[0:2]
+        filenames = [source_path.split('/')[-1] for source_path in center_left_right]
+        impaths = [join(run_path, 'IMG', filename) for filename in filenames]
+        measurement = float(line[3])
+        if INCLUDE_LR:
+            images.extend([cv2.imread(impath) for impath in impaths])
+            # derived from multi-camera example image
+            correction = 0.15
+            left_measurement = measurement + correction
+            right_measurement = measurement - correction
+            measurements.extend([measurement, left_measurement, right_measurement])
+        else:
+            images.append(cv2.imread(impaths[0]))
+            measurements.append(measurement)
+        
+    # Augment images by flipping horizontally and negating steering angle.
+    for image, measurement in zip(images, measurements):
+      augmented_images.append(image)
+      augmented_measurements.append(measurement)
+      augmented_images.append(np.fliplr(image))
+      augmented_measurements.append(measurement*-1.0)
 
 X_train = np.array(augmented_images)
 y_train = np.array(augmented_measurements)
