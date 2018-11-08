@@ -4,7 +4,7 @@ import numpy as np
 from os import listdir
 from os.path import join
 
-INCLUDE_LR=False
+INCLUDE_LR=True
 
 augmented_images, augmented_measurements = [], []
 collected_data_path = './collected_data/'
@@ -26,7 +26,7 @@ for run in listdir(collected_data_path):
         if INCLUDE_LR:
             images.extend([cv2.imread(impath) for impath in impaths])
             # derived from multi-camera example image
-            correction = 0.15
+            correction = 0.05
             left_measurement = measurement + correction
             right_measurement = measurement - correction
             measurements.extend([measurement, left_measurement, right_measurement])
