@@ -45,7 +45,7 @@ X_train = np.array(augmented_images)
 y_train = np.array(augmented_measurements)
 
 from keras.models import Sequential
-from keras.layers import Lambda, Cropping2D, Convolution2D, Flatten, Dense, Dropout
+from keras.layers import Lambda, Cropping2D, Convolution2D, Flatten, Dense
 from keras.optimizers import Adam
 
 model = Sequential()
@@ -58,7 +58,6 @@ model.add(Convolution2D(128, 3, 3, activation='relu'))
 model.add(Convolution2D(128, 3, 3, activation='relu'))
 model.add(Flatten())
 model.add(Dense(200))
-model.add(Dropout(0.2))
 model.add(Dense(70))
 model.add(Dense(10))
 model.add(Dense(1))
