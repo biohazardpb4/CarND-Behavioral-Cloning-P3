@@ -4,7 +4,7 @@ import numpy as np
 from os import listdir
 from os.path import join
 
-INCLUDE_LR=True
+INCLUDE_LR=False
 
 augmented_images, augmented_measurements = [], []
 collected_data_path = './collected_data/'
