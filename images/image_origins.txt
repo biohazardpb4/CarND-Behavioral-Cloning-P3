@@ -1,0 +1,15 @@
+./collected_data/another_center_lap/IMG/center_2018_11_08_22_29_00_405.jpg
+./images/center.jpg
+
+./collected_data/more_recovery/IMG/center_2018_11_07_21_18_06_461.jpg
+./images/recover_right.jpg
+
+./collected_data/more_recovery/IMG/center_2018_11_07_21_18_14_077.jpg
+./images/recover_center.jpg
+
+./collected_data/more_recovery/IMG/center_2018_11_07_22_05_41_303.jpg
+./images/recover_left.jpg
+
+./collected_data/more_recovery/IMG/center_2018_11_07_21_19_16_458.jpg
+./images/pre_flip.jpg
+

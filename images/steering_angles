@@ -1,0 +1,8 @@
+# discovered using grep -r $IMG ../collected_data/ | cut -d ',' -f 4
+
+center.jpg: -0.02352941
+post_flip.jpg: 0.09411765
+pre_flip.jpg: -0.09411765
+recover_center.jpg: -0.3117647
+recover_left.jpg: 0.6352941
+recover_right.jpg: 0
